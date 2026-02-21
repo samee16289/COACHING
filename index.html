@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SANKALP Pro</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body>
+
+<!-- ─── LOGIN SCREEN ──────────────────────────────────────────────────────── -->
+<div id="loginScreen" class="login-screen">
+  <div class="login-bg">
+    <div class="login-orb orb1"></div>
+    <div class="login-orb orb2"></div>
+    <div class="login-orb orb3"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
+      <h1>SANKALP <span>Pro</span></h1>
+      <p>Coaching Institute Management System</p>
+    </div>
+    <form id="loginForm" class="login-form">
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <i class="fas fa-user"></i>
+          <input type="text" id="loginUsername" placeholder="Enter your username" required/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="loginPassword" placeholder="Enter your password" required/>
+          <button type="button" class="toggle-pw" onclick="togglePassword()"><i class="fas fa-eye" id="eyeIcon"></i></button>
+        </div>
+      </div>
+      <div id="loginError" class="login-error hidden"></div>
+      <button type="submit" class="btn-login" id="loginBtn">
+        <span id="loginBtnText">Sign In</span>
+        <div id="loginSpinner" class="btn-spinner hidden"></div>
+      </button>
+    </form>
+    <p class="login-footer">© 2025 SANKALP Pro. All rights reserved.</p>
+  </div>
+</div>
+
+<!-- ─── MAIN APP ──────────────────────────────────────────────────────────── -->
+<div id="mainApp" class="main-app hidden">
+
+  <!-- SIDEBAR -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="brand-icon-sm"><i class="fas fa-graduation-cap"></i></div>
+        <span class="brand-name">SANKALP</span>
+      </div>
+      <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" onclick="showSection('dashboard')"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a>
+      <a href="#" class="nav-item" onclick="showSection('students')"><i class="fas fa-users"></i><span>Students</span></a>
+      <a href="#" class="nav-item" onclick="showSection('fees')"><i class="fas fa-rupee-sign"></i><span>Fees</span></a>
+      <a href="#" class="nav-item" onclick="showSection('attendance')"><i class="fas fa-calendar-check"></i><span>Attendance</span></a>
+      <a href="#" class="nav-item" onclick="showSection('expenses')"><i class="fas fa-wallet"></i><span>Expenses</span></a>
+      <a href="#" class="nav-item" onclick="showSection('classes')"><i class="fas fa-chalkboard-teacher"></i><span>Classes</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="user-avatar"><i class="fas fa-user-tie"></i></div>
+        <div class="user-meta">
+          <span id="sidebarUsername" class="user-name">Teacher</span>
+          <span class="user-role">Administrator</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h2 id="pageTitle">Dashboard</h2>
+        <span id="pageBreadcrumb" class="breadcrumb">Overview</span>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-institute"><i class="fas fa-school"></i><span id="instituteName">SANKALP Institute</span></div>
+        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+      </div>
+    </header>
+
+    <main class="main-content">
+
+      <!-- ── DASHBOARD ─────────────────────────────────────────────────────── -->
+      <section id="dashboardSection" class="section active">
+        <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+          <div class="stat-card" style="--card-accent:#2563eb">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Total Students</span>
+              <span class="stat-value" id="totalStudents">0</span>
+              <span class="stat-sub">Active enrollments</span>
+            </div>
+            <div class="stat-bg-icon"><i class="fas fa-users"></i></div>
+          </div>
+          <div class="stat-card" style="--card-accent:#16a34a">
+            <div class="stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fas fa-rupee-sign"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Fees Collected</span>
+              <span class="stat-value" id="totalCollected">₹0</span>
+              <span class="stat-sub">Total revenue</span>
+            </div>
+            <div class="stat-bg-icon"><i class="fas fa-rupee-sign"></i></div>
+          </div>
+          <div class="stat-card" style="--card-accent:#dc2626">
+            <div class="stat-icon" style="background:#fee2e2;color:#dc2626"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Pending Fees</span>
+              <span class="stat-value" id="totalPending">₹0</span>
+              <span class="stat-sub">Outstanding amount</span>
+            </div>
+            <div class="stat-bg-icon"><i class="fas fa-clock"></i></div>
+          </div>
+          <div class="stat-card" style="--card-accent:#d97706">
+            <div class="stat-icon" style="background:#fef3c7;color:#d97706"><i class="fas fa-wallet"></i></div>
+            <div class="stat-info">
+              <span class="stat-label">Monthly Expenses</span>
+              <span class="stat-value" id="totalMonthExpense">₹0</span>
+              <span class="stat-sub">This month</span>
+            </div>
+            <div class="stat-bg-icon"><i class="fas fa-wallet"></i></div>
+          </div>
+        </div>
+        <div class="dashboard-bottom">
+          <div class="recent-card">
+            <div class="card-header">
+              <h3>Recent Students</h3>
+              <button class="btn-sm" onclick="showSection('students')">View All</button>
+            </div>
+            <div id="recentStudentsList" class="recent-list">
+              <div class="empty-state"><i class="fas fa-user-graduate"></i><p>No students yet</p></div>
+            </div>
+          </div>
+          <div class="quick-card">
+            <div class="card-header"><h3>Quick Actions</h3></div>
+            <div class="quick-actions">
+              <button class="quick-btn" onclick="showSection('students');setTimeout(()=>openAddStudentModal(),300)"><i class="fas fa-user-plus"></i><span>Add Student</span></button>
+              <button class="quick-btn" onclick="showSection('expenses');setTimeout(()=>openAddExpenseModal(),300)"><i class="fas fa-plus-circle"></i><span>Add Expense</span></button>
+              <button class="quick-btn" onclick="showSection('classes');setTimeout(()=>openAddClassModal(),300)"><i class="fas fa-chalkboard"></i><span>Add Class</span></button>
+              <button class="quick-btn" onclick="loadDashboard()"><i class="fas fa-sync-alt"></i><span>Refresh Data</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── STUDENTS ───────────────────────────────────────────────────────── -->
+      <section id="studentsSection" class="section">
+        <div class="section-header">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="studentSearch" placeholder="Search students by name, class, or mobile..." oninput="filterStudents()"/>
+          </div>
+          <button class="btn-primary" onclick="openAddStudentModal()"><i class="fas fa-plus"></i> Add Student</button>
+        </div>
+        <div class="table-card">
+          <div id="studentsTableWrap" class="table-wrap">
+            <div class="loading-state"><div class="spinner"></div><p>Loading students...</p></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── FEES ───────────────────────────────────────────────────────────── -->
+      <section id="feesSection" class="section">
+        <div class="fee-stats-row" id="feeStatsRow">
+          <div class="fee-stat-card" style="--fc:#2563eb"><div class="fee-stat-icon" style="background:#dbeafe;color:#2563eb"><i class="fas fa-users"></i></div><div><span class="fee-stat-val" id="feeTotalStudents">0</span><span class="fee-stat-lbl">Total Students</span></div></div>
+          <div class="fee-stat-card" style="--fc:#16a34a"><div class="fee-stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fas fa-rupee-sign"></i></div><div><span class="fee-stat-val" id="feeTotalYearly">₹0</span><span class="fee-stat-lbl">Total Yearly Fees</span></div></div>
+          <div class="fee-stat-card" style="--fc:#16a34a"><div class="fee-stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fas fa-check-circle"></i></div><div><span class="fee-stat-val" id="feeTotalCollected">₹0</span><span class="fee-stat-lbl">Total Collected</span></div></div>
+          <div class="fee-stat-card" style="--fc:#dc2626"><div class="fee-stat-icon" style="background:#fee2e2;color:#dc2626"><i class="fas fa-clock"></i></div><div><span class="fee-stat-val" id="feeTotalPending">₹0</span><span class="fee-stat-lbl">Total Pending</span></div></div>
+          <div class="fee-stat-card" style="--fc:#d97706"><div class="fee-stat-icon" style="background:#fef3c7;color:#d97706"><i class="fas fa-exclamation-circle"></i></div><div><span class="fee-stat-val" id="feeDefaulters">0</span><span class="fee-stat-lbl">Defaulters</span></div></div>
+        </div>
+        <div class="att-tabs">
+          <button class="att-tab active" id="tabFeeRecords" onclick="switchFeeTab('records')"><i class="fas fa-table"></i> Fee Records</button>
+          <button class="att-tab" id="tabFeeHistory" onclick="switchFeeTab('history')"><i class="fas fa-history"></i> Payment History</button>
+        </div>
+        <div id="feeTabRecords" class="att-tab-content active">
+          <div class="table-card">
+            <div class="card-header">
+              <h3><i class="fas fa-file-invoice-dollar" style="color:var(--primary)"></i> Yearly Fee Records</h3>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <div class="search-bar" style="max-width:240px"><i class="fas fa-search"></i><input type="text" id="feeSearch" placeholder="Search student..." oninput="filterFeeTable()"/></div>
+                <select id="feeStatusFilter" onchange="filterFeeTable()" style="padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;outline:none;background:white">
+                  <option value="">All Status</option><option value="paid">Fully Paid</option><option value="partial">Partial</option><option value="unpaid">Unpaid</option>
+                </select>
+                <button class="btn-sm" onclick="loadFees()"><i class="fas fa-sync-alt"></i> Refresh</button>
+              </div>
+            </div>
+            <div id="feesTableWrap" class="table-wrap"><div class="loading-state"><div class="spinner"></div><p>Loading fee data...</p></div></div>
+          </div>
+        </div>
+        <div id="feeTabHistory" class="att-tab-content hidden">
+          <div class="table-card">
+            <div class="card-header"><h3><i class="fas fa-history" style="color:var(--primary)"></i> Payment History</h3><button class="btn-sm" onclick="loadFeeHistory()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+            <div id="feeHistoryWrap" class="table-wrap"><div class="empty-state"><i class="fas fa-receipt"></i><p>Loading payment history...</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── ATTENDANCE ─────────────────────────────────────────────────────── -->
+      <section id="attendanceSection" class="section">
+        <div class="att-stats-row" id="attStatsRow" style="display:none">
+          <div class="att-stat-pill" style="--pill-color:#2563eb"><i class="fas fa-users"></i><span id="attTotalCount">0</span><label>Total</label></div>
+          <div class="att-stat-pill" style="--pill-color:#16a34a"><i class="fas fa-user-check"></i><span id="attPresentCount">0</span><label>Present Today</label></div>
+          <div class="att-stat-pill" style="--pill-color:#dc2626"><i class="fas fa-user-times"></i><span id="attAbsentCount">0</span><label>Absent Today</label></div>
+          <div class="att-stat-pill" style="--pill-color:#d97706"><i class="fas fa-exclamation-triangle"></i><span id="attLowCount">0</span><label>Below 75%</label></div>
+        </div>
+        <div class="att-tabs">
+          <button class="att-tab active" id="tabMarkAtt" onclick="switchAttTab('mark')"><i class="fas fa-clipboard-check"></i> Mark Attendance</button>
+          <button class="att-tab" id="tabViewAtt" onclick="switchAttTab('view')"><i class="fas fa-chart-bar"></i> Attendance Records</button>
+          <button class="att-tab" id="tabHistoryAtt" onclick="switchAttTab('history')"><i class="fas fa-history"></i> Attendance Log</button>
+        </div>
+        <div id="attTabMark" class="att-tab-content active">
+          <div class="table-card">
+            <div class="card-header">
+              <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+                <h3><i class="fas fa-clipboard-check" style="color:var(--primary)"></i> Mark Today's Attendance</h3>
+                <div class="att-date-badge"><i class="fas fa-calendar"></i><span id="todayDateLabel"></span></div>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap">
+                <button class="btn-sm" onclick="markAllPresent()"><i class="fas fa-check-double"></i> All Present</button>
+                <button class="btn-sm btn-sm-danger" onclick="markAllAbsent()"><i class="fas fa-times"></i> All Absent</button>
+                <button class="btn-primary" onclick="submitAttendance()" id="submitAttBtn">
+                  <span id="submitAttText"><i class="fas fa-save"></i> Save Attendance</span>
+                  <div id="submitAttSpinner" class="btn-spinner hidden"></div>
+                </button>
+              </div>
+            </div>
+            <div style="padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <label style="font-size:13px;font-weight:600;color:var(--text-muted)">Filter by Class:</label>
+              <select id="attClassFilter" onchange="filterAttendanceTable()" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;outline:none"><option value="">All Classes</option></select>
+              <div class="search-bar" style="max-width:260px"><i class="fas fa-search"></i><input type="text" id="attSearch" placeholder="Search student..." oninput="filterAttendanceTable()"/></div>
+            </div>
+            <div id="markAttTableWrap" class="table-wrap"><div class="loading-state"><div class="spinner"></div><p>Loading students...</p></div></div>
+          </div>
+        </div>
+        <div id="attTabView" class="att-tab-content hidden">
+          <div class="table-card">
+            <div class="card-header"><h3><i class="fas fa-chart-bar" style="color:var(--primary)"></i> Student Attendance Overview</h3><button class="btn-sm" onclick="loadAttendanceRecords()"><i class="fas fa-sync-alt"></i> Refresh</button></div>
+            <div id="viewAttTableWrap" class="table-wrap"><div class="loading-state"><div class="spinner"></div><p>Loading records...</p></div></div>
+          </div>
+        </div>
+        <div id="attTabHistory" class="att-tab-content hidden">
+          <div class="table-card">
+            <div class="card-header">
+              <h3><i class="fas fa-history" style="color:var(--primary)"></i> Daily Attendance Log</h3>
+              <div style="display:flex;gap:10px;align-items:center">
+                <input type="date" id="historyDateFilter" onchange="filterHistory()" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;outline:none"/>
+                <button class="btn-sm" onclick="loadAttendanceLog()"><i class="fas fa-sync-alt"></i> Refresh</button>
+              </div>
+            </div>
+            <div id="historyTableWrap" class="table-wrap"><div class="empty-state"><i class="fas fa-history"></i><p>Select a date to view log</p></div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── EXPENSES ───────────────────────────────────────────────────────── -->
+      <section id="expensesSection" class="section">
+        <!-- Expense Stats -->
+        <div class="fee-stats-row" style="grid-template-columns:repeat(4,1fr)">
+          <div class="fee-stat-card" style="--fc:#dc2626"><div class="fee-stat-icon" style="background:#fee2e2;color:#dc2626"><i class="fas fa-calendar-alt"></i></div><div><span class="fee-stat-val" id="expTotalMonth">₹0</span><span class="fee-stat-lbl">This Month</span></div></div>
+          <div class="fee-stat-card" style="--fc:#d97706"><div class="fee-stat-icon" style="background:#fef3c7;color:#d97706"><i class="fas fa-rupee-sign"></i></div><div><span class="fee-stat-val" id="expTotalYear">₹0</span><span class="fee-stat-lbl">This Year</span></div></div>
+          <div class="fee-stat-card" style="--fc:#2563eb"><div class="fee-stat-icon" style="background:#dbeafe;color:#2563eb"><i class="fas fa-receipt"></i></div><div><span class="fee-stat-val" id="expTotalCount">0</span><span class="fee-stat-lbl">Total Records</span></div></div>
+          <div class="fee-stat-card" style="--fc:#8b5cf6"><div class="fee-stat-icon" style="background:#ede9fe;color:#8b5cf6"><i class="fas fa-tags"></i></div><div><span class="fee-stat-val" id="expTopCategory" style="font-size:14px">—</span><span class="fee-stat-lbl">Top Category</span></div></div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 320px;gap:20px;margin-bottom:20px">
+          <!-- Expense Table -->
+          <div class="table-card">
+            <div class="card-header">
+              <h3><i class="fas fa-wallet" style="color:var(--primary)"></i> Expense Records</h3>
+              <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                <input type="month" id="expMonthFilter" onchange="loadExpenses()" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;outline:none"/>
+                <select id="expCatFilter" onchange="loadExpenses()" style="padding:7px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:13px;outline:none;background:white">
+                  <option value="">All Categories</option>
+                  <option>Rent</option><option>Salaries</option><option>Utilities</option><option>Stationery</option>
+                  <option>Marketing</option><option>Maintenance</option><option>Equipment</option><option>Miscellaneous</option>
+                </select>
+                <button class="btn-primary" onclick="openAddExpenseModal()"><i class="fas fa-plus"></i> Add Expense</button>
+              </div>
+            </div>
+            <div id="expensesTableWrap" class="table-wrap"><div class="loading-state"><div class="spinner"></div><p>Loading expenses...</p></div></div>
+          </div>
+
+          <!-- Category Chart -->
+          <div class="table-card" style="height:fit-content">
+            <div class="card-header"><h3><i class="fas fa-chart-pie" style="color:var(--primary)"></i> By Category</h3></div>
+            <div style="padding:16px" id="expCategoryChart">
+              <div class="empty-state" style="padding:24px"><i class="fas fa-chart-pie"></i><p>No data yet</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── CLASSES / BATCHES ──────────────────────────────────────────────── -->
+      <section id="classesSection" class="section">
+        <!-- Class Stats -->
+        <div class="fee-stats-row" style="grid-template-columns:repeat(4,1fr)">
+          <div class="fee-stat-card" style="--fc:#2563eb"><div class="fee-stat-icon" style="background:#dbeafe;color:#2563eb"><i class="fas fa-chalkboard"></i></div><div><span class="fee-stat-val" id="clsTotalClasses">0</span><span class="fee-stat-lbl">Total Classes</span></div></div>
+          <div class="fee-stat-card" style="--fc:#16a34a"><div class="fee-stat-icon" style="background:#dcfce7;color:#16a34a"><i class="fas fa-check-circle"></i></div><div><span class="fee-stat-val" id="clsActiveClasses">0</span><span class="fee-stat-lbl">Active Classes</span></div></div>
+          <div class="fee-stat-card" style="--fc:#8b5cf6"><div class="fee-stat-icon" style="background:#ede9fe;color:#8b5cf6"><i class="fas fa-user-graduate"></i></div><div><span class="fee-stat-val" id="clsTotalEnrolled">0</span><span class="fee-stat-lbl">Total Enrolled</span></div></div>
+          <div class="fee-stat-card" style="--fc:#d97706"><div class="fee-stat-icon" style="background:#fef3c7;color:#d97706"><i class="fas fa-users"></i></div><div><span class="fee-stat-val" id="clsTotalCapacity">0</span><span class="fee-stat-lbl">Total Capacity</span></div></div>
+        </div>
+
+        <div class="section-header">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="classSearch" placeholder="Search by class, batch, subject, or teacher..." oninput="filterClasses()"/>
+          </div>
+          <button class="btn-primary" onclick="openAddClassModal()"><i class="fas fa-plus"></i> Add Class</button>
+        </div>
+        <div class="table-card">
+          <div id="classesTableWrap" class="table-wrap"><div class="loading-state"><div class="spinner"></div><p>Loading classes...</p></div></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ─── MODALS ────────────────────────────────────────────────────────────── -->
+
+<!-- Add Student -->
+<div id="addStudentModal" class="modal-overlay hidden">
+  <div class="modal">
+    <div class="modal-header"><h3><i class="fas fa-user-plus"></i> Add New Student</h3><button class="modal-close" onclick="closeAddStudentModal()"><i class="fas fa-times"></i></button></div>
+    <form id="addStudentForm" onsubmit="submitAddStudent(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Full Name *</label><input type="text" name="name" placeholder="Student full name" required/></div>
+          <div class="form-group"><label>Father's Name *</label><input type="text" name="fatherName" placeholder="Father's full name" required/></div>
+          <div class="form-group"><label>Mobile Number *</label><input type="tel" name="mobile" placeholder="10-digit mobile" pattern="[0-9]{10}" required/></div>
+          <div class="form-group"><label>Class *</label>
+            <select name="class" required><option value="">Select Class</option><option>Class 6</option><option>Class 7</option><option>Class 8</option><option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option><option>Dropper</option><option>Other</option></select>
+          </div>
+          <div class="form-group"><label>Course *</label>
+            <select name="course" required><option value="">Select Course</option><option>JEE Foundation</option><option>NEET Foundation</option><option>JEE Mains</option><option>JEE Advanced</option><option>NEET UG</option><option>Board Preparation</option><option>Other</option></select>
+          </div>
+          <div class="form-group"><label>Admission Date *</label><input type="date" name="admissionDate" required/></div>
+          <div class="form-group"><label>Yearly Fee (₹) *</label><input type="number" name="yearlyFee" placeholder="e.g. 36000" min="0" required/></div>
+          <div class="form-group"><label>Fees Paid (₹)</label><input type="number" name="feesPaid" placeholder="Amount paid so far" min="0" value="0"/></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeAddStudentModal()">Cancel</button>
+        <button type="submit" class="btn-primary" id="addStudentBtn"><span id="addStudentBtnText">Add Student</span><div id="addStudentSpinner" class="btn-spinner hidden"></div></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirm (shared) -->
+<div id="deleteModal" class="modal-overlay hidden">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3><i class="fas fa-exclamation-triangle" style="color:#dc2626"></i> Confirm Delete</h3><button class="modal-close" onclick="closeDeleteModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body"><p style="color:#374151">Are you sure you want to delete <strong id="deleteStudentName"></strong>? This action cannot be undone.</p></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()"><span id="deleteBtnText">Delete</span><div id="deleteSpinner" class="btn-spinner hidden"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- Update Attendance % -->
+<div id="updateAttModal" class="modal-overlay hidden">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3><i class="fas fa-user-edit"></i> Update Attendance %</h3><button class="modal-close" onclick="closeUpdateAttModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Update attendance for <strong id="updateAttStudentName"></strong></p>
+      <div class="form-group"><label>Attendance % (0–100)</label><input type="number" id="updateAttValue" min="0" max="100" placeholder="e.g. 85"/></div>
+      <div id="attPercentPreview" style="margin-top:14px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:12px;color:var(--text-muted)">Preview</span><span id="attPreviewLabel" style="font-size:12px;font-weight:700"></span></div>
+        <div style="height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden"><div id="attPreviewBar" style="height:100%;width:0%;border-radius:5px;transition:width .4s,background .4s"></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeUpdateAttModal()">Cancel</button>
+      <button class="btn-primary" id="confirmUpdateAttBtn" onclick="confirmUpdateAtt()"><span id="updateAttBtnText">Update</span><div id="updateAttSpinner" class="btn-spinner hidden"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- Update Fees -->
+<div id="updateFeesModal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:520px">
+    <div class="modal-header"><h3><i class="fas fa-rupee-sign" style="color:var(--primary)"></i> Update Fee Details</h3><button class="modal-close" onclick="closeUpdateFeesModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="fee-student-info-box" id="feeStudentInfoBox"></div>
+      <div class="form-grid" style="margin-top:16px">
+        <div class="form-group"><label>Yearly Fee (₹) *</label><input type="number" id="updateYearlyFee" placeholder="e.g. 36000" min="0" oninput="updateFeePreview()"/></div>
+        <div class="form-group"><label>Total Fees Paid (₹) *</label><input type="number" id="updateFeesPaid" placeholder="Total paid so far" min="0" oninput="updateFeePreview()"/></div>
+      </div>
+      <div class="fee-preview-box" id="feePreviewBox">
+        <div class="fee-preview-row"><span>Yearly Fee</span><strong id="prev_yearly">₹0</strong></div>
+        <div class="fee-preview-row"><span>Total Paid</span><strong id="prev_paid" style="color:var(--success)">₹0</strong></div>
+        <div class="fee-preview-row" style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px"><span style="font-weight:700">Pending</span><strong id="prev_pending" style="color:var(--danger);font-size:16px">₹0</strong></div>
+        <div style="margin-top:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="font-size:12px;color:var(--text-muted)">Progress</span><span id="prev_pct" style="font-size:12px;font-weight:700;color:var(--primary)">0%</span></div>
+          <div style="height:10px;background:#e2e8f0;border-radius:5px;overflow:hidden"><div id="prev_bar" style="height:100%;width:0%;border-radius:5px;background:var(--primary);transition:width .4s"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeUpdateFeesModal()">Cancel</button>
+      <button class="btn-primary" id="confirmUpdateFeesBtn" onclick="confirmUpdateFees()"><span id="updateFeesBtnText"><i class="fas fa-save"></i> Save Changes</span><div id="updateFeesSpinner" class="btn-spinner hidden"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- Record Payment -->
+<div id="paymentModal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:460px">
+    <div class="modal-header"><h3><i class="fas fa-plus-circle" style="color:#16a34a"></i> Record New Payment</h3><button class="modal-close" onclick="closePaymentModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="fee-student-info-box" id="payStudentInfoBox"></div>
+      <div style="margin-top:16px">
+        <div class="form-group" style="margin-bottom:14px"><label>Payment Amount (₹) *</label><input type="number" id="paymentAmount" placeholder="Enter amount" min="1" oninput="updatePaymentPreview()"/></div>
+        <div class="form-group" style="margin-bottom:14px"><label>Payment Date</label><input type="date" id="paymentDate"/></div>
+        <div class="form-group" style="margin-bottom:14px"><label>Payment Mode</label>
+          <select id="paymentMode" style="padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--font);font-size:14px;outline:none;width:100%">
+            <option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option><option value="Cheque">Cheque</option><option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Remark (Optional)</label><input type="text" id="paymentRemark" placeholder="e.g. First instalment"/></div>
+      </div>
+      <div class="fee-preview-box" id="payPreviewBox" style="display:none">
+        <div class="fee-preview-row"><span>Previous Paid</span><strong id="pay_prev_paid" style="color:var(--text-muted)">₹0</strong></div>
+        <div class="fee-preview-row"><span>This Payment</span><strong id="pay_this" style="color:var(--primary)">₹0</strong></div>
+        <div class="fee-preview-row" style="border-top:1px solid var(--border);padding-top:8px;margin-top:4px"><span style="font-weight:700">New Total Paid</span><strong id="pay_new_total" style="color:var(--success);font-size:15px">₹0</strong></div>
+        <div class="fee-preview-row"><span style="font-weight:700">Still Pending</span><strong id="pay_new_pending" style="color:var(--danger);font-size:15px">₹0</strong></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closePaymentModal()">Cancel</button>
+      <button class="btn-primary" style="background:linear-gradient(135deg,#16a34a,#15803d)" id="confirmPaymentBtn" onclick="confirmPayment()"><span id="paymentBtnText"><i class="fas fa-check"></i> Record Payment</span><div id="paymentSpinner" class="btn-spinner hidden"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Expense Modal -->
+<div id="addExpenseModal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-header"><h3><i class="fas fa-plus-circle" style="color:#dc2626"></i> Add New Expense</h3><button class="modal-close" onclick="closeAddExpenseModal()"><i class="fas fa-times"></i></button></div>
+    <form id="addExpenseForm" onsubmit="submitAddExpense(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Date *</label><input type="date" name="expDate" id="expDateInput" required/></div>
+          <div class="form-group"><label>Category *</label>
+            <select name="expCategory" required>
+              <option value="">Select Category</option>
+              <option>Rent</option><option>Salaries</option><option>Utilities</option><option>Stationery</option>
+              <option>Marketing</option><option>Maintenance</option><option>Equipment</option><option>Miscellaneous</option>
+            </select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1"><label>Description</label><input type="text" name="expDescription" placeholder="Brief description of expense"/></div>
+          <div class="form-group"><label>Amount (₹) *</label><input type="number" name="expAmount" placeholder="e.g. 5000" min="1" required/></div>
+          <div class="form-group"><label>Payment Mode</label>
+            <select name="expPaymentMode">
+              <option value="Cash">Cash</option><option value="UPI">UPI</option><option value="Bank Transfer">Bank Transfer</option><option value="Cheque">Cheque</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeAddExpenseModal()">Cancel</button>
+        <button type="submit" class="btn-primary" style="background:linear-gradient(135deg,#dc2626,#b91c1c)" id="addExpenseBtn">
+          <span id="addExpenseBtnText"><i class="fas fa-plus"></i> Add Expense</span><div id="addExpenseSpinner" class="btn-spinner hidden"></div>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Class Modal -->
+<div id="addClassModal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header"><h3><i class="fas fa-chalkboard-teacher" style="color:var(--primary)"></i> Add New Class / Batch</h3><button class="modal-close" onclick="closeAddClassModal()"><i class="fas fa-times"></i></button></div>
+    <form id="addClassForm" onsubmit="submitAddClass(event)">
+      <div class="modal-body">
+        <div class="form-grid">
+          <div class="form-group"><label>Class Name *</label><input type="text" name="className" placeholder="e.g. Class 11" required/></div>
+          <div class="form-group"><label>Batch Name</label><input type="text" name="batchName" placeholder="e.g. Morning Batch A"/></div>
+          <div class="form-group"><label>Subject</label><input type="text" name="subject" placeholder="e.g. Physics, Mathematics"/></div>
+          <div class="form-group"><label>Teacher Name</label><input type="text" name="teacherName" placeholder="Assigned teacher"/></div>
+          <div class="form-group"><label>Schedule</label><input type="text" name="schedule" placeholder="e.g. Mon-Wed-Fri 9:00 AM"/></div>
+          <div class="form-group"><label>Room / Location</label><input type="text" name="room" placeholder="e.g. Room 101"/></div>
+          <div class="form-group" style="grid-column:1/-1"><label>Capacity</label><input type="number" name="capacity" placeholder="Max students" min="0" value="30"/></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeAddClassModal()">Cancel</button>
+        <button type="submit" class="btn-primary" id="addClassBtn"><span id="addClassBtnText"><i class="fas fa-plus"></i> Add Class</span><div id="addClassSpinner" class="btn-spinner hidden"></div></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Class Modal -->
+<div id="editClassModal" class="modal-overlay hidden">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-header"><h3><i class="fas fa-edit" style="color:var(--primary)"></i> Edit Class / Batch</h3><button class="modal-close" onclick="closeEditClassModal()"><i class="fas fa-times"></i></button></div>
+    <form id="editClassForm" onsubmit="submitEditClass(event)">
+      <div class="modal-body">
+        <input type="hidden" name="editClassId" id="editClassId"/>
+        <div class="form-grid">
+          <div class="form-group"><label>Class Name *</label><input type="text" name="editClassName" id="editClassName" required/></div>
+          <div class="form-group"><label>Batch Name</label><input type="text" name="editBatchName" id="editBatchName"/></div>
+          <div class="form-group"><label>Subject</label><input type="text" name="editSubject" id="editSubject"/></div>
+          <div class="form-group"><label>Teacher Name</label><input type="text" name="editTeacherName" id="editTeacherName"/></div>
+          <div class="form-group"><label>Schedule</label><input type="text" name="editSchedule" id="editSchedule"/></div>
+          <div class="form-group"><label>Room / Location</label><input type="text" name="editRoom" id="editRoom"/></div>
+          <div class="form-group"><label>Capacity</label><input type="number" name="editCapacity" id="editCapacity" min="0"/></div>
+          <div class="form-group"><label>Status</label>
+            <select name="editClassStatus" id="editClassStatus"><option value="Active">Active</option><option value="Inactive">Inactive</option></select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-secondary" onclick="closeEditClassModal()">Cancel</button>
+        <button type="submit" class="btn-primary" id="editClassBtn"><span id="editClassBtnText"><i class="fas fa-save"></i> Save Changes</span><div id="editClassSpinner" class="btn-spinner hidden"></div></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
